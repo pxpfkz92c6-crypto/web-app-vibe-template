@@ -112,7 +112,6 @@ If NO:
 
 If YES:
 > Feature eligible for `/deploy` via PR → Vercel → main merge.
-```
 
 ---
 
