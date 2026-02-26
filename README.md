@@ -1,323 +1,271 @@
-# AI Coding Starter Kit
+---
 
-> Build production-ready web apps faster with AI-powered Skills handling Requirements, Architecture, Development, QA, and Deployment.
+# Vibe Coding Starter Kit (Codex Edition)
 
-This template uses [Claude Code](https://docs.anthropic.com/en/docs/claude-code) with modern Skills, Rules, and Sub-Agents to provide a complete AI-powered development workflow.
+> Build production-ready web apps using a structured, Codex-driven workflow with enforced architecture, RLS-by-default security, and PR-based deployment discipline.
 
-## Quick Start
+This template is designed for **Codex-powered development**, using a strict Feature-Files system and phase-based execution model.
 
-### 1. Clone & Install
+It does **not** rely on Claude Skills.
+It uses structured prompt modes defined in `AGENTS.md`.
+
+---
+
+# What This Template Enforces
+
+* Next.js (App Router) + TypeScript
+* Supabase (Email OTP + Postgres + RLS-by-default)
+* GitHub PR workflow
+* Vercel (Preview → Production)
+* Playwright E2E testing
+* Feature-Files system (one feature = one file)
+* Human-in-the-loop checkpoints
+* No phase skipping
+
+---
+
+# Quick Start
+
+## 1. Clone & Install
 
 ```bash
-git clone https://github.com/YOUR_USERNAME/ai-coding-starter-kit.git my-project
+git clone https://github.com/YOUR_USERNAME/vibe-coding-starter-kit.git my-project
 cd my-project
 npm install
 ```
 
-### 2. (Optional) Supabase Setup
+---
 
-If you need a backend:
+## 2. Supabase Setup (If Backend Needed)
 
-1. Create Supabase Project: [supabase.com](https://supabase.com)
-2. Copy `.env.local.example` to `.env.local`
-3. Add your Supabase credentials
-4. Uncomment the Supabase client in `src/lib/supabase.ts`
+1. Create a project at [https://supabase.com](https://supabase.com)
+2. Copy `.env.local.example` → `.env.local`
+3. Add:
 
-Skip this step if you're building frontend-only (landing pages, portfolios, etc.)
+   * `NEXT_PUBLIC_SUPABASE_URL`
+   * `NEXT_PUBLIC_SUPABASE_ANON_KEY`
+4. Apply migrations from `supabase/migrations/`
 
-### 3. Start Development
+All user-owned tables must use RLS-by-default.
+
+---
+
+## 3. Start Development
 
 ```bash
 npm run dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) in your browser.
+Open:
+[http://localhost:3000](http://localhost:3000)
 
-### 4. Initialize Your Project
+---
 
-Open Claude Code and describe your project. The `/requirements` skill automatically detects that this is a fresh project and enters **Init Mode**:
+# How This System Works
+
+This template follows a strict **Feature-Files lifecycle**.
+
+All work happens through structured Codex prompts defined by roles in `AGENTS.md`.
+
+There are no slash commands.
+
+You copy structured prompts into Codex for each phase.
+
+---
+
+# Development Workflow (Strict)
 
 ```
-/requirements I want to build a project management tool for small teams
-where users can create projects, assign tasks, and track progress.
+1. Requirements   → Define feature spec
+2. Architecture   → Design schema + RLS + integration
+3. Frontend       → Implement UI
+4. Backend        → Implement migrations + RLS + server logic
+5. QA             → Validate acceptance criteria + security
+6. Deploy         → PR → Preview → Merge → Production
 ```
 
-The skill will:
-1. Ask interactive questions to clarify your vision, target users, and MVP scope
-2. Create your **Product Requirements Document** (`docs/PRD.md`)
-3. Break the project into individual features (Single Responsibility)
-4. Create all **feature specs** (`features/PROJ-1.md`, `PROJ-2.md`, etc.)
-5. Update **feature tracking** (`features/INDEX.md`)
-6. Recommend which feature to build first
+You may not skip phases.
 
-You don't need to put everything in the first prompt - a brief description is enough. The skill asks follow-up questions interactively.
+---
 
-### 5. Build Features
+# Feature Tracking
 
-After project initialization, build features one at a time using skills:
+All features live in:
 
 ```
-/architecture    Design the tech approach for features/PROJ-1-user-auth.md
-/frontend        Build the UI for features/PROJ-1-user-auth.md
-/backend         Build the API for features/PROJ-1-user-auth.md
-/qa              Test features/PROJ-1-user-auth.md
-/deploy          Deploy to Vercel
+features/
+  INDEX.md
+  PROJ-1-<slug>.md
+  PROJ-2-<slug>.md
 ```
 
-Each skill suggests the next step when it finishes. Handoffs are always user-initiated.
+Each feature file accumulates:
 
-To add more features later, run `/requirements` again - it detects the existing PRD and adds a single feature.
+* Requirements
+* Architecture
+* QA results
+* Deployment record
 
----
+Status states:
 
-## Available Skills
-
-| Skill | Command | What It Does |
-|-------|---------|-------------|
-| Requirements Engineer | `/requirements` | Creates feature specs with user stories, acceptance criteria, edge cases |
-| Solution Architect | `/architecture` | Designs PM-friendly tech architecture (no code, only high-level design) |
-| Frontend Developer | `/frontend` | Builds UI with React, Tailwind CSS, and shadcn/ui |
-| Backend Developer | `/backend` | Builds APIs, database schemas, RLS policies with Supabase |
-| QA Engineer | `/qa` | Tests features against acceptance criteria + security audit |
-| DevOps | `/deploy` | Deploys to Vercel with production-ready checks |
-| Help | `/help` | Context-aware guide: shows where you are and what to do next |
-
-### How Skills Work
-
-- **Skills** are defined in `.claude/skills/` and auto-discovered by Claude Code
-- **Rules** in `.claude/rules/` are auto-applied based on file context (no manual loading)
-- **Sub-Agents** run heavy tasks (frontend, backend, QA) in isolated contexts for cost efficiency
-- **CLAUDE.md** provides project context automatically at every session start
+* 🔵 Planned
+* 🟡 In Progress
+* ✅ Deployed
 
 ---
 
-## Development Workflow
+# Repo Structure (Codex Standard)
 
 ```
-1. Define    /requirements  -->  Feature spec in features/PROJ-X.md
-2. Design    /architecture  -->  Tech design added to feature spec
-3. Build     /frontend      -->  UI components implemented
-             /backend       -->  APIs + database (if needed)
-4. Test      /qa            -->  Test results added to feature spec
-5. Ship      /deploy        -->  Deployed to Vercel
+app/                     Routes + Server Actions
+lib/                     Utilities (Supabase client, helpers)
+supabase/migrations/     Schema source of truth
+tests/e2e/               Playwright tests
+features/                Feature specs
+docs/                    PRDs + runbooks
+AGENTS.md                Codex governance rules
 ```
 
-### Feature Tracking
-
-Features are tracked in `features/INDEX.md`:
-
-| ID | Feature | Status | Spec |
-|----|---------|--------|------|
-| PROJ-1 | User Login | Deployed | [Spec](features/PROJ-1-user-login.md) |
-| PROJ-2 | Dashboard | In Progress | [Spec](features/PROJ-2-dashboard.md) |
-
-Every skill reads this file at start and updates it when done, preventing duplicate work.
-
----
-
-## Tech Stack
-
-| Category | Tool | Why? |
-|----------|------|------|
-| **Framework** | Next.js 16 | React + Server Components + App Router |
-| **Language** | TypeScript | Type safety |
-| **Styling** | Tailwind CSS | Utility-first CSS |
-| **UI Library** | shadcn/ui | Copy-paste, customizable components |
-| **Backend** | Supabase (optional) | PostgreSQL + Auth + Storage + Realtime |
-| **Deployment** | Vercel | Zero-config Next.js hosting |
-| **Validation** | Zod | Runtime type validation |
-
----
-
-## Project Structure
+Nested rule files:
 
 ```
-ai-coding-starter-kit/
-+-- CLAUDE.md                        <-- Auto-loaded project context
-+-- .claude/
-|   +-- settings.json                <-- Team permissions (committed)
-|   +-- settings.local.json          <-- Personal overrides (gitignored)
-|   +-- rules/                       <-- Auto-applied coding rules
-|   |   +-- general.md                   Git workflow, feature tracking
-|   |   +-- frontend.md                  shadcn/ui, component standards
-|   |   +-- backend.md                   RLS, validation, queries
-|   |   +-- security.md                  Secrets, headers, auth
-|   +-- skills/                      <-- Invocable workflows (/command)
-|   |   +-- requirements/SKILL.md        /requirements
-|   |   +-- architecture/SKILL.md        /architecture
-|   |   +-- frontend/SKILL.md            /frontend (runs as sub-agent)
-|   |   +-- backend/SKILL.md             /backend (runs as sub-agent)
-|   |   +-- qa/SKILL.md                  /qa (runs as sub-agent)
-|   |   +-- deploy/SKILL.md              /deploy
-|   |   +-- help/SKILL.md                /help
-|   +-- agents/                      <-- Sub-agent configs
-|       +-- frontend-dev.md              Model, tools, limits
-|       +-- backend-dev.md
-|       +-- qa-engineer.md
-+-- features/                        <-- Feature specifications
-|   +-- INDEX.md                         Status tracking
-|   +-- README.md                        Spec format documentation
-+-- docs/
-|   +-- PRD.md                       <-- Product Requirements Document
-|   +-- production/                  <-- Production setup guides
-|       +-- error-tracking.md            Sentry setup (5 min)
-|       +-- security-headers.md          XSS/Clickjacking protection
-|       +-- performance.md               Lighthouse, optimization
-|       +-- database-optimization.md     Indexing, N+1, caching
-|       +-- rate-limiting.md             Upstash Redis
-+-- src/
-|   +-- app/                         <-- Pages (Next.js App Router)
-|   +-- components/
-|   |   +-- ui/                      <-- shadcn/ui components (35+ installed)
-|   +-- hooks/                       <-- Custom React hooks
-|   +-- lib/                         <-- Utilities
-+-- public/                          <-- Static files
+app/AGENTS.md
+supabase/AGENTS.md
+tests/AGENTS.md
 ```
 
----
-
-## Getting Started
-
-### 1. Fill Out Your PRD
-
-Define your product vision in `docs/PRD.md`:
-- What are you building and why?
-- Who are the target users?
-- What features are on the roadmap?
-
-### 2. Build Your First Feature
-
-Run `/requirements` with your feature idea. The skill will:
-- Ask interactive questions to clarify requirements
-- Create a feature spec in `features/PROJ-1-name.md`
-- Update `features/INDEX.md` with the new feature
-- Suggest running `/architecture` as the next step
-
-### 3. Add shadcn/ui Components (as needed)
-
-35+ components are pre-installed. Add more as needed:
-```bash
-npx shadcn@latest add [component-name]
-```
-
-### 4. Production Setup (first deployment)
-
-When you're ready to deploy, the `/deploy` skill guides you through:
-- Vercel setup and deployment
-- Error tracking with Sentry
-- Security headers configuration
-- Performance monitoring with Lighthouse
-
-See `docs/production/` for detailed setup guides.
+Codex must always read before modifying.
 
 ---
 
-## How It Works Under the Hood
+# RLS-by-Default (Non-Negotiable)
 
-### Skills (`.claude/skills/`)
-Each skill is a structured workflow that Claude Code discovers automatically. Skills can run inline (in the main conversation) or as forked sub-agents (isolated context window).
+Every user-owned table must:
 
-| Skill | Execution | Why? |
-|-------|-----------|------|
-| `/requirements` | Inline | Needs live interaction with user |
-| `/architecture` | Inline | Short output, user reviews in real-time |
-| `/frontend` | Sub-agent (forked) | Heavy file editing, lots of output |
-| `/backend` | Sub-agent (forked) | Heavy file editing, SQL, API code |
-| `/qa` | Sub-agent (forked) | Systematic testing, lots of output |
-| `/deploy` | Inline | Deployment needs user oversight |
-| `/help` | Inline | Quick status check and guidance |
+* Include `user_id uuid references auth.users(id)`
+* Enable Row Level Security
+* Define SELECT/INSERT/UPDATE/DELETE policies
+* Restrict access via:
 
-### Rules (`.claude/rules/`)
-Coding standards that are auto-applied based on which files Claude is working with. No manual loading needed.
+  ```
+  user_id = auth.uid()
+  ```
 
-### Sub-Agent Configs (`.claude/agents/`)
-Lightweight configurations that define model, tool access, and turn limits for forked skills.
+No feature may weaken isolation.
 
-### CLAUDE.md
-Auto-loaded at every session start. Contains tech stack, conventions, and references to PRD and feature index.
+RLS failure = Critical severity.
 
 ---
 
-## Context Engineering
+# Authentication Standard
 
-AI agents work best with clean, structured context - not longer prompts. This template is designed around these principles:
+Only Email OTP is allowed.
 
-### State lives in files, not in memory
+Flow:
 
-Every skill reads `features/INDEX.md` and the relevant feature spec at start. After context compaction or a new session, nothing is lost - the agent simply re-reads the files. Progress tracking, acceptance criteria, and tech designs all live in markdown files, not in the conversation.
+1. `/login`
+2. 6-digit OTP sent via Supabase
+3. `/verify`
+4. Secure session cookies
+5. Protected routes require auth
 
-### Context is layered
-
-Not everything is loaded at once. Information is layered by relevance:
-
-| Layer | What | When loaded |
-|-------|------|-------------|
-| `CLAUDE.md` | Tech stack, conventions, commands | Every session (auto) |
-| `.claude/rules/` | Coding standards | When editing matching files (auto) |
-| Skill `SKILL.md` | Workflow instructions | When skill is invoked |
-| Feature spec | Requirements, AC, tech design | On demand (skill reads it) |
-| `docs/production/` | Deployment guides | Only when referenced |
-
-### Context is isolated
-
-Heavy implementation skills (`/frontend`, `/backend`, `/qa`) run as **forked sub-agents** with their own context window. Research noise from one skill doesn't pollute another. Each fork starts clean and loads only what it needs.
-
-### Context recovery is built in
-
-All forked skills include a **Context Recovery** section: if the context is compacted mid-task, the agent re-reads the feature spec, checks `git diff` for progress, and continues without restarting or duplicating work.
-
-### Always read, never guess
-
-A global rule (`rules/general.md`) enforces: always read a file before modifying it, never assume contents from memory, verify import paths and API routes by reading. This prevents hallucinated code references - the most common source of AI coding errors.
+No password auth unless explicitly approved.
 
 ---
 
-## Customization for Your Team
+# Daily Git Workflow
 
-This template is designed as a starting point. Customize it for your team:
+1. Create branch:
 
-1. **Edit CLAUDE.md** - Add your project-specific conventions and build commands
-2. **Edit docs/PRD.md** - Define your product vision and roadmap
-3. **Edit .claude/rules/** - Adjust coding standards for your team
-4. **Edit .claude/skills/** - Modify workflows to match your process
-5. **Edit .claude/settings.json** - Configure team permissions
+   ```
+   feature/<slug>
+   ```
+2. Implement via Codex
+3. Commit:
+
+   ```
+   feat(PROJ-X): description
+   ```
+4. Push
+5. Open PR
+6. Vercel creates Preview
+7. CI runs:
+
+   * lint
+   * typecheck
+   * Playwright
+8. Merge only if green
+
+Only PRs ship changes.
 
 ---
 
-## Production Guides
+# Definition of Done
 
-Standalone guides in `docs/production/`:
+A feature is complete only if:
 
-| Guide | Setup Time | What It Does |
-|-------|-----------|-------------|
-| [Error Tracking](docs/production/error-tracking.md) | 5 min | Sentry integration for automatic error capture |
-| [Security Headers](docs/production/security-headers.md) | 2 min | XSS, Clickjacking, MIME sniffing protection |
-| [Performance](docs/production/performance.md) | 10 min | Lighthouse checks, image optimization, caching |
-| [Database Optimization](docs/production/database-optimization.md) | 15 min | Indexing, N+1 prevention, query optimization |
-| [Rate Limiting](docs/production/rate-limiting.md) | 10 min | Upstash Redis for API abuse prevention |
+* Acceptance criteria implemented
+* RLS enforced
+* No Critical/High QA bugs
+* Playwright updated
+* CI passes
+* Feature file updated
+* INDEX.md updated
+* Production verified
 
 ---
 
-## Scripts
+# Scripts
 
 ```bash
-npm run dev        # Development server (localhost:3000)
-npm run build      # Production build
-npm run start      # Production server
-npm run lint       # ESLint
+npm run dev
+npm run build
+npm run lint
+npm run start
 ```
 
 ---
 
-## Author
+# Tooling Stack
 
-Created by **Alex Sprogis** – AI Product Engineer & Content Creator.
-
-- [YouTube](https://www.youtube.com/@alex.sprogis)
-- [Website](https://alexsprogis.de)
+| Layer           | Tool                           |
+| --------------- | ------------------------------ |
+| UI              | Next.js + Tailwind + shadcn/ui |
+| Backend         | Supabase                       |
+| Email           | Resend                         |
+| Domain          | Porkbun                        |
+| CI              | GitHub Actions                 |
+| Hosting         | Vercel                         |
+| Testing         | Playwright                     |
+| Coding Operator | Codex                          |
 
 ---
 
-## License
+# Context Discipline
 
-MIT License - feel free to use for your projects!
+This system is designed for deterministic AI development.
+
+Principles:
+
+* State lives in files, not memory.
+* Codex must read before editing.
+* No guessing.
+* No phase skipping.
+* No direct production edits.
+* PR-based shipping only.
+
+---
+
+# How To Add A Feature
+
+1. Update `features/INDEX.md`
+2. Create `features/PROJ-X-<slug>.md`
+3. Write requirements
+4. Move through all phases
+5. Merge PR
+
+---
+
+# Governance
+
+All operational rules are defined in: AGENTS.md
