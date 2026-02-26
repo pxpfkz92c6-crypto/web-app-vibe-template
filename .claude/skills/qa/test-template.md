@@ -1,7 +1,7 @@
 ---
 # QA Test Results Template (Codex + Feature-Files Standard)
 Add this section to the **end** of:
-`features/PROJ-X-<slug>.md`
+features/PROJ-X-<slug>.md
 ---
 
 ## QA Test Results (QA Engineer)
