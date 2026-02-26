@@ -1,4 +1,3 @@
----
 # Vibe Coding Starter Kit (Codex Edition)
 > Build production-ready web apps using a structured, Codex-driven workflow with enforced architecture, RLS-by-default security, and PR-based deployment discipline.
 
@@ -6,7 +5,6 @@ This template is designed for **Codex-powered development**, using a strict Feat
 
 It does **not** rely on Claude Skills.
 It uses structured prompt modes defined in `AGENTS.md`.
----
 
 # What This Template Enforces
 
